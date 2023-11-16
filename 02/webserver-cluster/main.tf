@@ -92,8 +92,10 @@ resource "aws_autoscaling_group" "myasg" {
   health_check_type = "ELB"
   launch_configuration = aws_launch_configuration.lb-launch-conifg.name
   vpc_zone_identifier = data.aws_subnets.default-subnet.ids
-}
 
+  target_group_arns = [aws_lb_target_group.my-alb-tg.arn]
+  depends_on = [aws_lb_target_group.my-alb-tg]
+}
 
 #---------------------------------------#
 # 2. ELB(ALB)
@@ -108,6 +110,7 @@ resource "aws_lb_target_group" "my-alb-tg" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default-vpc.id
 }
+
 
 resource "aws_security_group" "alb-sg" {
   name        = "alb-sg"
