@@ -53,10 +53,10 @@ resource "aws_security_group" "lb-launch-config-sg" {
 
   ingress {
     description      = "8080/TCP from VPC"
-    from_port        = 8080
-    to_port          = 8080
+    from_port        = var.backend-port
+    to_port          = var.backend-port
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = var.cidr_blocks
  }
 
   egress {
@@ -106,7 +106,7 @@ resource "aws_autoscaling_group" "myasg" {
 
 resource "aws_lb_target_group" "my-alb-tg" {
   name     = "my-alb-tg"
-  port     = 8080
+  port     = var.backend-port
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default-vpc.id
 }
@@ -118,8 +118,8 @@ resource "aws_security_group" "alb-sg" {
 
   ingress {
     description      = "80/TCP from VPC"
-    from_port        = 80
-    to_port          = 80
+    from_port        = var.frontend-port
+    to_port          = var.frontend-port
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
  }
@@ -150,7 +150,7 @@ resource "aws_lb" "my-alb" {
 
 resource "aws_lb_listener" "frontend" {
   load_balancer_arn = aws_lb.my-alb.arn
-  port              = "80"
+  port              = var.frontend-port
   protocol          = "HTTP"
 
   default_action {

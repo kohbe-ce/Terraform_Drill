@@ -1,0 +1,9 @@
+cat << EOF > ~/.ssh/config
+
+Host ${hostname}
+  HostName ${hostname}
+  IdentifyFile ${identifyfile}
+  User ${user}
+  ForwardAgent yes
+
+EOF
